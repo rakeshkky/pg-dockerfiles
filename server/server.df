@@ -1,0 +1,26 @@
+FROM postgres:14.3
+MAINTAINER 12475069+rakeshkky@users.noreply.github.com 
+
+ENV POSTGIS_MAJOR 3
+
+RUN apt-get update \
+ && apt-get install -y \
+            python3-pip \
+            python3-pkg-resources \
+            postgresql-server-dev-$PG_MAJOR \
+            libpq-dev \
+            daemontools libevent-dev python3-all-dev lzop pv \
+            postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
+            postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
+ && pip3 install wal-e[aws] \
+ && apt-get purge -y --auto-remove python-pip python3-pip libpq-dev \
+    libevent-dev python3-all-dev postgresql-server-dev-$PG_MAJOR \
+ && rm -rf ~/.cache/pip \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY start-server.sh /
+RUN chmod +x /start-server.sh
+
+ENTRYPOINT ["/start-server.sh"]
+
+CMD ["postgres"]
