@@ -1,0 +1,7 @@
+FROM postgres:14.3
+MAINTAINER 12475069+rakeshkky@users.noreply.github.com
+
+COPY initialise.sh /
+RUN chmod +x /initialise.sh
+
+ENTRYPOINT ["/initialise.sh"]
